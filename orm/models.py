@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from sqlalchemy import Column, Date, Float, ForeignKey, Integer, Table, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import NullType
@@ -12,18 +11,17 @@ metadata = Base.metadata
 class Depo(Base):
     __tablename__ = 'depos'
 
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, primary_key=True)
     name = Column(Text)
     open_date = Column(Date)
 
-    lines = relationship('Line', secondary='depos_to_lines')
     trains = relationship('Train', secondary='depos_to_trains')
 
 
 class Line(Base):
     __tablename__ = 'lines'
 
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, primary_key=True)
     color = Column(Text)
     name = Column(Text)
     year_open = Column(Integer)
@@ -32,6 +30,7 @@ class Line(Base):
     time_to_travel = Column(Integer)
     avg_depth = Column(Integer)
     avg_pasng_per_day = Column(Integer)
+    depos = relationship('Depo', secondary='lines_to_depos')
 
 
 t_sqlite_sequence = Table(
@@ -44,20 +43,13 @@ t_sqlite_sequence = Table(
 class Train(Base):
     __tablename__ = 'trains'
 
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, primary_key=True)
     name = Column(Text)
     expl_start = Column(Integer)
     expl_end = Column(Integer)
     max_speed = Column(Integer)
     voltage = Column(Integer)
     capacity = Column(Integer)
-
-
-t_depos_to_lines = Table(
-    'depos_to_lines', metadata,
-    Column('depo_id', ForeignKey('depos.id')),
-    Column('line_id', ForeignKey('lines.id'))
-)
 
 
 t_depos_to_trains = Table(
@@ -67,10 +59,17 @@ t_depos_to_trains = Table(
 )
 
 
+t_lines_to_depos = Table(
+    'lines_to_depos', metadata,
+    Column('line_id', ForeignKey('lines.id')),
+    Column('depo_id', ForeignKey('depos.id'))
+)
+
+
 class Station(Base):
     __tablename__ = 'stations'
 
-    id = Column(Integer, primary_key=True, unique=True)
+    id = Column(Integer, primary_key=True)
     name = Column(Text)
     open_date = Column(Date)
     depth = Column(Float)
