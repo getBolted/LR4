@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine
+import sqlalchemy as db
 
 if __name__ == '__main__':
-    eng
+    engine = db.create_engine('sqlite://metro.db')
+    connection = engine.connect()
