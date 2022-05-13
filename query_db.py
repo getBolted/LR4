@@ -51,7 +51,13 @@ def calc_old_stations():
     result = engine.execute(query).fetchall()
 
     for rec in result:
-        print(f"{rec._mapping['name']}\n")
+        print(f"{rec.name}\n")
+
+
+def raw_query():
+    result = engine.execute("SELECT * FROM stations s WHERE s.depth > -10")
+    for rec in result:
+        print(f"{rec.name, rec.depth}\n")
 
 
 if __name__ == '__main__':
@@ -63,6 +69,7 @@ if __name__ == '__main__':
     # add_couple(session)
     # del_station(session)
     # calc_mindept_by_type()
-    calc_old_stations()
+    # calc_old_stations()
+    raw_query()
 
     session.close()
